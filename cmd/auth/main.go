@@ -50,6 +50,7 @@ func main() {
 			os.Exit(1)
 		}
 	}()
+	//орромром
 
 	logger.Info("сервер запущен")
 
