@@ -26,28 +26,31 @@ run:
 
 # ---------- Buf / Protobuf ----------
 
-buf-update:
-	buf dep update # require VPN or access
-
 proto-get:
-	git clone https://github.com/envoyproxy/protoc-gen-validate.git $(VALIDATE_DIR)
-	git clone https://github.com/googleapis/googleapis.git $(GOOGLEAPIS_DIR)
+	git clone https://github.com/bufbuild/protovalidate.git $(GOPATH)/src/github.com/bufbuild/protovalidate
+	git clone https://github.com/googleapis/googleapis.git $(GOPATH)/src/github.com/googleapis/googleapis
+	git clone https://github.com/grpc-ecosystem/grpc-gateway.git $(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway
 
 proto-install:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	go install github.com/envoyproxy/protoc-gen-validate@latest
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 
 proto-gen:
 	protoc \
-		-I $(PROTO_DIR) \
-		-I $(VALIDATE_DIR) \
-		-I $(GOOGLEAPIS_DIR) \
-		--go_out=$(OUT_DIR) --go_opt=paths=source_relative \
-		--go-grpc_out=$(OUT_DIR) --go-grpc_opt=paths=source_relative \
-		--grpc-gateway_out=$(OUT_DIR) --grpc-gateway_opt=paths=source_relative \
-		--validate_out=lang=go,paths=source_relative:$(OUT_DIR) \
-		$(PROTO_DIR)/sync/final-boss/v1/auth.proto
+		--proto_path=/Users/alexandertolstoy/go/src/github.com/envoyproxy/protoc-gen-validate \
+		--proto_path=/Users/alexandertolstoy/go/src/github.com/googleapis/googleapis \
+		--proto_path=/Users/alexandertolstoy/go/src/github.com/grpc-ecosystem/grpc-gateway \
+		--proto_path=./api \
+		--go_out=./pkg/proto \
+		--go_opt=paths=source_relative \
+		--go-grpc_out=./pkg/proto \
+		--go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=./pkg/proto \
+		--grpc-gateway_opt=paths=source_relative \
+		./api/sync/final-boss/v1/auth.proto
+
 
 # ---------- SQLC ----------
 

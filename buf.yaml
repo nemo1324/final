@@ -2,5 +2,8 @@ version: v1
 
 deps:
   - buf.build/bufbuild/protovalidate
+  - buf.build/googleapis/googleapis
 
-
+build:
+  roots:
+    - api

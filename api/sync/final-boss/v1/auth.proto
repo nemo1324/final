@@ -5,7 +5,7 @@ package auth;
 import "validate/validate.proto";
 import "google/api/annotations.proto";
 
-option go_package = "final/pkg/proto/sync/final-boss/v1;finalv1";
+option go_package = "final/pkg/proto/final/v1;finalv1";
 
 service Auth {
   rpc Register (RegisterRequest) returns (RegisterResponse) {
