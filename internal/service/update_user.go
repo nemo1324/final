@@ -10,7 +10,7 @@ import (
 
 func (s *service) UpdateUser(ctx context.Context, req *finalv1.UpdateUserRequest) (*finalv1.UpdateUserResponse, error) {
 	err := s.DB.UpdateUserName(ctx, sqlc.UpdateUserNameParams{
-		ID:   int32(req.GetId()),
+		ID:   req.GetId(),
 		Name: req.GetUsername(),
 	})
 	if err != nil {

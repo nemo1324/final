@@ -1,7 +1,7 @@
 -- name: CreateUser :one
 INSERT INTO users (name, login, pass, status)
 VALUES (@name, @login, @pass, @status)
-RETURNING id;
+RETURNING id::BIGINT;
 
 -- name: GetUserByLogin :one
 SELECT * FROM users

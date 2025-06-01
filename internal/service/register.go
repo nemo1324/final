@@ -6,7 +6,6 @@ import (
 	finalv1 "final/pkg/proto/sync/final-boss/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"strconv"
 )
 
 func (s *service) Register(ctx context.Context, req *finalv1.RegisterRequest) (*finalv1.RegisterResponse, error) {
@@ -24,6 +23,7 @@ func (s *service) Register(ctx context.Context, req *finalv1.RegisterRequest) (*
 	s.logger.Debug("created user id", "userID", userID)
 
 	return &finalv1.RegisterResponse{
-		UserId: strconv.FormatInt(int64(userID), 10),
+		UserId: userID,
 	}, nil
+
 }

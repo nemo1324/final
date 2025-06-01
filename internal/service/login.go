@@ -28,6 +28,6 @@ func (s *service) Login(ctx context.Context, req *finalv1.LoginRequest) (*finalv
 
 	return &finalv1.LoginResponse{
 		Token:  token,
-		UserId: int64(user.ID),
+		UserId: user.ID,
 	}, nil
 }

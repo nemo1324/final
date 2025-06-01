@@ -81,7 +81,7 @@ migrate-create:
 	migrate create -ext sql -dir migrations/postgres mock
 
 migrate-up:
-	migrate -path ./migrations/postgres -database "postgres://$(PG_USER):$(PG_PASSWORD)@localhost:$(PG_PORT)/$(PG_DB)?sslmode=disable" up
+	migrate -path ./migrations/postgres -database "postgres://$(PG_USER):$(PG_PASSWORD)@host.docker.internal:$(PG_PORT)/$(PG_DB)?sslmode=disable" up
 
 migrate-down:
 	migrate -path ./migrations/postgres -database "postgres://$(PG_USER):$(PG_PASSWORD)@localhost:$(PG_PORT)/$(PG_DB)?sslmode=disable" down -all

@@ -15,7 +15,7 @@ func (s *service) GetUser(ctx context.Context, req *finalv1.GetUserRequest) (*fi
 	}
 
 	return &finalv1.GetUserResponse{
-		Id:       int64(user.ID),
+		Id:       user.ID,
 		Username: user.Name,
 	}, nil
 }

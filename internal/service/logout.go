@@ -8,7 +8,7 @@ import (
 )
 
 func (s *service) Logout(ctx context.Context, req *finalv1.LogoutRequest) (*finalv1.LogoutResponse, error) {
-	if err := s.DB.Logout(ctx, int32(req.GetUserId())); err != nil {
+	if err := s.DB.Logout(ctx, req.GetUserId()); err != nil {
 		return nil, status.Error(codes.Internal, "logout failed")
 	}
 
