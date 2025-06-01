@@ -8,10 +8,6 @@ import (
 )
 
 func (s *service) Logout(ctx context.Context, req *finalv1.LogoutRequest) (*finalv1.LogoutResponse, error) {
-	if err := req.ValidateAll(); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-
 	if err := s.DB.Logout(ctx, int32(req.GetUserId())); err != nil {
 		return nil, status.Error(codes.Internal, "logout failed")
 	}

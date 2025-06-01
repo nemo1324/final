@@ -8,10 +8,6 @@ import (
 )
 
 func (s *service) GetUser(ctx context.Context, req *finalv1.GetUserRequest) (*finalv1.GetUserResponse, error) {
-	if err := req.ValidateAll(); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-
 	user, err := s.DB.GetUserByID(ctx, req.GetId())
 	if err != nil {
 		s.logger.Error("user not found: %v", err)
@@ -20,6 +16,6 @@ func (s *service) GetUser(ctx context.Context, req *finalv1.GetUserRequest) (*fi
 
 	return &finalv1.GetUserResponse{
 		Id:       int64(user.ID),
-		Username: user.Name, // <-- здесь нужно достать имя из структуры
+		Username: user.Name,
 	}, nil
 }

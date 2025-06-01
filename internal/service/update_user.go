@@ -9,10 +9,6 @@ import (
 )
 
 func (s *service) UpdateUser(ctx context.Context, req *finalv1.UpdateUserRequest) (*finalv1.UpdateUserResponse, error) {
-	if err := req.ValidateAll(); err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-
 	err := s.DB.UpdateUserName(ctx, sqlc.UpdateUserNameParams{
 		ID:   int32(req.GetId()),
 		Name: req.GetUsername(),
