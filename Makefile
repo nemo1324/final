@@ -6,11 +6,10 @@ PG_DB = postgres
 
 PROTO_DIR=./api
 OUT_DIR=./pkg/proto
-VALIDATE_DIR=./protoc-gen-validate
-GOOGLEAPIS_DIR=./googleapis
+BUF_DIR=./api
 
 .PHONY: run proto-get proto-install proto-gen migrate-up migrate-down migrate-create \
-        sqlc test-db-up test-db-down test-db-exec test-db-delete buf-update
+        sqlc test-db-up test-db-down test-db-exec test-db-delete buf-update buf-gen
 
 # ---------- Запуск сервиса ----------
 
@@ -26,31 +25,37 @@ run:
 
 # ---------- Buf / Protobuf ----------
 
-proto-get:
-	git clone https://github.com/bufbuild/protovalidate.git $(GOPATH)/src/github.com/bufbuild/protovalidate
-	git clone https://github.com/googleapis/googleapis.git $(GOPATH)/src/github.com/googleapis/googleapis
-	git clone https://github.com/grpc-ecosystem/grpc-gateway.git $(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway
+buf-update:
+	buf mod update
 
 proto-install:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	go install github.com/bufbuild/protovalidate/cmd/protoc-gen-validate@latest
+
+proto-get:
+	git clone https://github.com/bufbuild/protovalidate.git $(GOPATH)/src/github.com/bufbuild/protovalidate
+	git clone https://github.com/googleapis/googleapis.git $(GOPATH)/src/github.com/googleapis/googleapis
+	git clone https://github.com/grpc-ecosystem/grpc-gateway.git $(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway
 
 proto-gen:
 	protoc \
-		--proto_path=/Users/alexandertolstoy/go/src/github.com/envoyproxy/protoc-gen-validate \
-		--proto_path=/Users/alexandertolstoy/go/src/github.com/googleapis/googleapis \
-		--proto_path=/Users/alexandertolstoy/go/src/github.com/grpc-ecosystem/grpc-gateway \
-		--proto_path=./api \
-		--go_out=./pkg/proto \
+		--proto_path=$(GOPATH)/src/github.com/bufbuild/protovalidate/proto \
+		--proto_path=$(GOPATH)/src/github.com/googleapis/googleapis \
+		--proto_path=$(GOPATH)/src/github.com/grpc-ecosystem/grpc-gateway \
+		--proto_path=$(PROTO_DIR) \
+		--go_out=$(OUT_DIR) \
 		--go_opt=paths=source_relative \
-		--go-grpc_out=./pkg/proto \
+		--go-grpc_out=$(OUT_DIR) \
 		--go-grpc_opt=paths=source_relative \
-		--grpc-gateway_out=./pkg/proto \
+		--grpc-gateway_out=$(OUT_DIR) \
 		--grpc-gateway_opt=paths=source_relative \
-		./api/sync/final-boss/v1/auth.proto
+		--validate_out=lang=go,paths=source_relative:$(OUT_DIR) \
+		$(PROTO_DIR)/sync/final-boss/v1/auth.proto
 
+buf-gen:
+	buf generate
 
 # ---------- SQLC ----------
 
@@ -89,7 +94,5 @@ migrate-down:
 swagger-gen:
 	protoc \
 		-I $(PROTO_DIR) \
-		-I $(VALIDATE_DIR) \
-		-I $(GOOGLEAPIS_DIR) \
 		--openapiv2_out=docs/swagger --openapiv2_opt logtostderr=true \
 		$(PROTO_DIR)/sync/final-boss/v1/auth.proto

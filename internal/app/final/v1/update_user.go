@@ -10,5 +10,6 @@ func (s *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, nil
 }

@@ -10,5 +10,6 @@ func (s *Server) Logout(ctx context.Context, req *pb.LogoutRequest) (*pb.LogoutR
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, nil
 }

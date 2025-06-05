@@ -21,15 +21,14 @@ type Postgres struct {
 
 func NewPostgres(
 	ctx context.Context,
-	logger *log.Logger,
 	cfg *config.Postgres,
+	logger *log.Logger,
 ) *Postgres {
 	conn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%v/%s?sslmode=%s",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DbName, cfg.SSLMode,
 	)
 
-	// Инициализация пула
 	pool, err := pgxpool.New(ctx, conn)
 	if err != nil {
 		logger.Error("connection to postgres failed", err)
@@ -37,11 +36,9 @@ func NewPostgres(
 	}
 	logger.Info("PostgreSQL connection pool initialized", "component", "postgres")
 
-	// Миграции
 	migrats := []embed.FS{pgmigrations.FS}
 	for _, fs := range migrats {
-		err := migrator.DoMigrate(fs, conn)
-		if err != nil {
+		if err := migrator.DoMigrate(fs, conn); err != nil {
 			logger.Error("migration failed", err)
 			return nil
 		}

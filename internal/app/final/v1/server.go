@@ -37,7 +37,7 @@ func NewServer(cfg *config.Config, logger *log.Logger, svc service.Service) *Ser
 }
 
 func (s *Server) Listen() error {
-	jwt.Init(s.cfg.JWT.Secret, time.Hour*24) // инициализируем глобальные параметры
+	jwt.Init(s.cfg.AUTH.Secret, time.Hour*24) // инициализируем глобальные параметры
 
 	s.grpcServer = grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

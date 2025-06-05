@@ -10,5 +10,6 @@ func (s *Server) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.GetUs
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, nil
 }

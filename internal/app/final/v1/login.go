@@ -10,5 +10,6 @@ func (s *Server) Login(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResp
 	if err != nil {
 		return nil, err
 	}
+
 	return resp, nil
 }

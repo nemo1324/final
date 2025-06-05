@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package auth;
 
-import "validate/validate.proto";
+import "buf/validate/validate.proto";
 import "google/api/annotations.proto";
 
 option go_package = "final/pkg/proto/final/v1;finalv1";
@@ -50,26 +50,26 @@ service Auth {
 }
 
 message RegisterRequest {
-  string username = 1 [(validate.rules).string = {
+  string username = 1 [(buf.validate.field).string = {
     min_len: 3,
     max_len: 30,
     pattern: "^[a-zA-Z0-9_]+$"
   }];
-  string password = 2 [(validate.rules).string.min_len = 8];
+  string password = 2 [(buf.validate.field).string.min_len = 8];
 }
 
 message RegisterResponse {
-  int64 user_id = 1;  // Изменено на int64
+  int64 user_id = 1;
 }
 
 message LoginRequest {
-  string username = 1 [(validate.rules).string.min_len = 3];
-  string password = 2 [(validate.rules).string.min_len = 8];
+  string username = 1 [(buf.validate.field).string.min_len = 3];
+  string password = 2 [(buf.validate.field).string.min_len = 8];
 }
 
 message LoginResponse {
   int64 user_id = 1;
-  string token = 2 [(validate.rules).string.min_len = 1];
+  string token = 2;
 }
 
 message LogoutRequest {
@@ -89,7 +89,7 @@ message GetUserResponse {
 
 message UpdateUserRequest {
   int64 id = 1;
-  string username = 2 [(validate.rules).string = {
+  string username = 2 [(buf.validate.field).string = {
     min_len: 3,
     max_len: 30,
     pattern: "^[a-zA-Z0-9_]+$"
