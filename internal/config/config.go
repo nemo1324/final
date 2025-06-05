@@ -11,7 +11,7 @@ type Config struct {
 	HTTP     *HTTP     `envconfig:"HTTP"`
 	Postgres *Postgres `envconfig:"POSTGRES"`
 	Logger   *Logger   `envconfig:"LOGGER"`
-	JWT      *JWT      `envconfig:"JWT"`
+	AUTH     *auth     `envconfig:"JWT"`
 }
 
 func Load() (*Config, error) {

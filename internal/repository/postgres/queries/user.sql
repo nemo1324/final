@@ -5,10 +5,10 @@ RETURNING id::BIGINT;
 
 -- name: GetUserByLogin :one
 SELECT * FROM users
-WHERE login = @login
-LIMIT 1;
+WHERE login = @login;
+
 
 -- name: GetUserByID :one
 SELECT * FROM users
-WHERE id = @id
-LIMIT 1;
+WHERE id = @id;
+

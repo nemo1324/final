@@ -1,5 +1,5 @@
 package config
 
-type JWT struct {
+type auth struct {
 	Secret string `envconfig:"SECRET"`
 }

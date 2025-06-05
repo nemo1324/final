@@ -8,7 +8,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"final/internal/config"
-	"final/internal/repository/postgres/sqlc"
 	"final/internal/utils/observability/log"
 	"final/migrations/migrator"
 	pgmigrations "final/migrations/postgres"
@@ -16,7 +15,6 @@ import (
 
 type Postgres struct {
 	connPool *pgxpool.Pool
-	queries  *sqlc.Queries
 	logger   *log.Logger
 	cfg      *config.Postgres
 }
@@ -52,7 +50,6 @@ func NewPostgres(
 
 	return &Postgres{
 		connPool: pool,
-		queries:  sqlc.New(pool),
 		logger:   logger,
 		cfg:      cfg,
 	}
@@ -60,8 +57,4 @@ func NewPostgres(
 
 func (p *Postgres) Close() {
 	p.connPool.Close()
-}
-
-func (p *Postgres) Q() *sqlc.Queries {
-	return p.queries
 }
