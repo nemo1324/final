@@ -23,7 +23,7 @@ func NewPostgres(
 	ctx context.Context,
 	cfg *config.Postgres,
 	logger *log.Logger,
-) *Postgres {
+) (*Postgres, error) {
 	conn := fmt.Sprintf(
 		"postgres://%s:%s@%s:%v/%s?sslmode=%s",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DbName, cfg.SSLMode,
@@ -31,16 +31,14 @@ func NewPostgres(
 
 	pool, err := pgxpool.New(ctx, conn)
 	if err != nil {
-		logger.Error("connection to postgres failed", err)
-		return nil
+		return nil, fmt.Errorf("connection to postgres failed: %w", err)
 	}
 	logger.Info("PostgreSQL connection pool initialized", "component", "postgres")
 
 	migrats := []embed.FS{pgmigrations.FS}
 	for _, fs := range migrats {
 		if err := migrator.DoMigrate(fs, conn); err != nil {
-			logger.Error("migration failed", err)
-			return nil
+			return nil, fmt.Errorf("migration failed: %w", err)
 		}
 	}
 	logger.Info("migrations applied successfully", "component", "postgres")
@@ -49,7 +47,7 @@ func NewPostgres(
 		connPool: pool,
 		logger:   logger,
 		cfg:      cfg,
-	}
+	}, nil
 }
 
 func (p *Postgres) Close() {

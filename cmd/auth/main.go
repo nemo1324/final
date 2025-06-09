@@ -30,9 +30,9 @@ func main() {
 	}
 
 	// Инициализируем базу данных
-	db := postgres.NewPostgres(ctx, cfg.Postgres, logger)
-	if db == nil {
-		logger.Error("не удалось инициализировать базу данных")
+	db, err := postgres.NewPostgres(ctx, cfg.Postgres, logger)
+	if err != nil {
+		logger.Error("failed to initialize database: %v", err)
 		os.Exit(1)
 	}
 	defer db.Close()

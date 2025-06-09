@@ -8,11 +8,12 @@ import (
 )
 
 func (s *service) DeleteUser(ctx context.Context, req *finalv1.DeleteUserRequest) (*finalv1.DeleteUserResponse, error) {
+	s.logger.Debug("DeleteUser request received", "user_id", req.GetId())
+
 	err := s.DB.DeleteUser(ctx, req.GetId())
 	if err != nil {
-		msg := "failed to delete user"
-		s.logger.Error(msg+": %v", err)
-		return nil, status.Error(codes.Internal, msg)
+		s.logger.Error("failed to delete user: %v", err)
+		return nil, status.Error(codes.Internal, "failed to delete user")
 	}
 
 	return &finalv1.DeleteUserResponse{}, nil

@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS users (
                                      login TEXT NOT NULL UNIQUE,
                                      pass TEXT NOT NULL,
                                      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-                                     status TEXT NOT NULL CHECK (status IN ('register', 'logout'))
+                                     status TEXT NOT NULL
 );

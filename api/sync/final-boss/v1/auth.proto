@@ -49,6 +49,16 @@ service Auth {
   }
 }
 
+// ----------- ENUM -----------
+
+enum UserStatus {
+  USER_STATUS_UNSPECIFIED = 0;
+  REGISTERED = 1;
+  LOGGED_OUT = 2;
+}
+
+// ----------- MESSAGES -----------
+
 message RegisterRequest {
   string username = 1 [(buf.validate.field).string = {
     min_len: 3,
@@ -56,6 +66,10 @@ message RegisterRequest {
     pattern: "^[a-zA-Z0-9_]+$"
   }];
   string password = 2 [(buf.validate.field).string.min_len = 8];
+  UserStatus status = 3 [(buf.validate.field).enum = {
+    defined_only: true,
+    not_in: [0]
+  }];
 }
 
 message RegisterResponse {
